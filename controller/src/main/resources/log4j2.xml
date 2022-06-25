@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info">
+
+    <Appenders>
+        <RollingFile name="rollingFile"
+                     fileName="logs/log4j2.log"
+                     filePattern="logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <SizeBasedTriggeringPolicy
+                        size="10 MB"/>
+            </Policies>
+        </RollingFile>
+
+        <File name="HibernateFile" fileName="logs/hibernate.log">
+            <PatternLayout pattern="%d{yyyy-MMM-dd HH:mm:ss a} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+
+        <File name="SecurityFile" fileName="logs/security.log">
+            <PatternLayout pattern="%d{yyyy-MMM-dd HH:mm:ss a} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+
+    </Appenders>
+
+    <Loggers>
+        <Logger name="org.hibernate.type.descriptor.sql" level="DEBUG" additivity="false">
+            <AppenderRef ref="HibernateFile"/>
+        </Logger>
+
+        <Logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
+            <AppenderRef ref="HibernateFile"/>
+        </Logger>
+
+        <Logger name="org.springframework.security" level="ERROR" additivity="false">
+            <AppenderRef ref="SecurityFile"/>
+        </Logger>
+
+        <Root level="ERROR">
+            <AppenderRef ref="rollingFile"/>
+        </Root>
+
+    </Loggers>
+
+</Configuration>
