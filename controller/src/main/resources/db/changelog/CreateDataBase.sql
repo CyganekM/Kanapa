@@ -84,7 +84,6 @@ CREATE TABLE `advertisements`
     `name`          varchar(200) CHARACTER SET big5 COLLATE big5_chinese_ci NOT NULL,
     `description`   text,
     `price`         decimal(10, 2)                                               DEFAULT NULL,
-    `foto`          blob,
     `date_start`    timestamp                                               NOT NULL,
     `date_close`    timestamp                                               NULL DEFAULT NULL,
     `date_bonus`    timestamp                                               NULL DEFAULT NULL,

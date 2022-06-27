@@ -18,7 +18,5 @@ public interface AdvertisementService {
 
     List<AdvertisementDto> getAdvertisementByUser(Long userId);
 
-    List<AdvertisementDto> getAdvertisementOrderByRating();
-
     List<AdvertisementDto> getAdvertisementByFilter(List<FilterDto> filterDtoList, String fieldSort, Sort.Direction sort) throws OperationException;
 }

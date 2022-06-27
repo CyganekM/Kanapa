@@ -23,6 +23,10 @@
             <PatternLayout pattern="%d{yyyy-MMM-dd HH:mm:ss a} [%t] %-5level %logger{36} - %msg%n"/>
         </File>
 
+        <File name="Kanapa" fileName="logs/kanapa.log">
+            <PatternLayout pattern="%d{yyyy-MMM-dd HH:mm:ss a} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+
     </Appenders>
 
     <Loggers>
@@ -30,12 +34,24 @@
             <AppenderRef ref="HibernateFile"/>
         </Logger>
 
+        <logger name="org.hibernate.type" level="TRACE" additivity="false">
+            <appender-ref ref="HibernateFile"/>
+        </logger>
+
         <Logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
             <AppenderRef ref="HibernateFile"/>
         </Logger>
 
         <Logger name="org.springframework.security" level="ERROR" additivity="false">
             <AppenderRef ref="SecurityFile"/>
+        </Logger>
+
+        <Logger name="com.senla.kanapa.service" level="DEBUG" additivity="false">
+            <AppenderRef ref="Kanapa"/>
+        </Logger>
+
+        <Logger name="com.senla.kanapa.controller.handler.RestExceptionHandler" additivity="false">
+            <AppenderRef ref="Kanapa"/>
         </Logger>
 
         <Root level="ERROR">

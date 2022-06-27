@@ -10,13 +10,16 @@ import com.senla.kanapa.service.exception.TokenCompareException;
 import com.senla.kanapa.service.mapper.TransactionMapper;
 import com.senla.kanapa.service.security.TokenExtractData;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionJpaRepository transactionJpaRepository;
@@ -26,9 +29,12 @@ public class TransactionServiceImpl implements TransactionService {
     private final TokenExtractData tokenExtractData;
 
     @Override
+    @Transactional
     public void setCustomerFlag(String tokenSeller, Long transactionId) throws TokenCompareException {
+        Long sellerId = tokenExtractData.extractUserIdFromToken(tokenSeller);
+        log.info("The seller sets a mark on the successful operation");
         Transaction transaction = transactionJpaRepository.getReferenceById(transactionId);
-        if (transaction.getAdvertisement().getUser().getId().equals(tokenExtractData.extractUserIdFromToken(tokenSeller))) {
+        if (transaction.getAdvertisement().getUser().getId().equals(sellerId)) {
             transaction.setCustomerFlag(true);
             transactionJpaRepository.save(transaction);
         } else {
@@ -37,16 +43,20 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    @Transactional
     public List<TransactionDto> getTransactionsSeller(String tokenSeller, Boolean customerFlag) {
         Long sellerId = tokenExtractData.extractUserIdFromToken(tokenSeller);
+        log.info("The seller id = {} requested operations", sellerId);
         List<Transaction> transactionList = transactionJpaRepository.getByAdvertisement_User_IdAndCustomerFlag(sellerId, customerFlag);
         return transactionList.stream().map(TransactionMapper::convertTransactionToDto).collect(Collectors.toList());
     }
 
     @Override
-    public void setTransactionRating(String tokenSeller, Long transactionId, Integer score) throws TokenCompareException {
+    @Transactional
+    public void setTransactionRating(String tokenCustomer, Long transactionId, Integer score) throws TokenCompareException {
+        Long customerId = tokenExtractData.extractUserIdFromToken(tokenCustomer);
+        log.info("The consumer Id = {} sets the rating to the seller", customerId);
         Transaction transaction = transactionJpaRepository.getReferenceById(transactionId);
-        Long customerId = tokenExtractData.extractUserIdFromToken(tokenSeller);
         if (transaction.getCustomer().getId().equals(customerId) && transaction.getCustomerFlag()) {
             transaction.setRating(score);
             transactionJpaRepository.save(transaction);
@@ -54,6 +64,7 @@ public class TransactionServiceImpl implements TransactionService {
             Double ratingUser = transactionJpaRepository.getRaringSeller(seller);
             seller.setRating(ratingUser);
             userJpaRepository.save(seller);
+            log.info("The rating has been set");
         } else {
             throw new TokenCompareException("You don't have access to edit this transaction");
         }

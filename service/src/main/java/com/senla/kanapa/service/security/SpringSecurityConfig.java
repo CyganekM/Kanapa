@@ -28,13 +28,14 @@ import java.util.List;
 @EnableGlobalMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
-    private final static String[] WHITE_LIST = {"/logins", "/swagger-ui/**", "/v3/**", "/users"};
-    private final static String[] ADMIN_LIST = {"/**/admin_role", "/**/kanapic", "/categories", "/categories/**"};
+    private static final String[] WHITE_LIST = {"/logins", "/swagger-ui/**", "/v3/**", "/users"};
+    private static final String[] ADMIN_LIST = {"/**/admin_role", "/**/kanapic", "/categories", "/categories/**"};
     private final UserService service;
     private final AccessDeniedImpl accessDenied;
     private final TokenExtractData tokenExtractData;
     private final TokenBlackListJpaRepository tokenBlackListJpaRepository;
     private final AuthenticationEntryPointImpl authenticationEntryPoint;
+
     @Autowired
     @Qualifier("handlerExceptionResolver")
     private HandlerExceptionResolver resolver;

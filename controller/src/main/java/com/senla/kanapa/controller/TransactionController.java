@@ -48,8 +48,8 @@ public class TransactionController {
     @Operation(summary = "Задать рейтинг продавцу",
             description = "Может сделать только тот пользователь, кторый совершил сделку(подтверждено продавцом)")
     @ResponseStatus(HttpStatus.OK)
-    public void setSellerRating(@RequestHeader(HttpHeaders.AUTHORIZATION) String tokenSeller,
+    public void setSellerRating(@RequestHeader(HttpHeaders.AUTHORIZATION) String tokenCustomer,
                                 @PathVariable Long transactionId, @RequestParam @Min(1) @Max(10) Integer score) throws TokenCompareException {
-        transactionService.setTransactionRating(tokenSeller, transactionId, score);
+        transactionService.setTransactionRating(tokenCustomer, transactionId, score);
     }
 }

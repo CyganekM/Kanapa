@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     public static final Set<String> TOKEN_BLACK = new HashSet<>();
+
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
     }

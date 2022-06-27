@@ -13,13 +13,16 @@ import com.senla.kanapa.service.exception.AccountBalanceException;
 import com.senla.kanapa.service.mapper.KanapicMapper;
 import com.senla.kanapa.service.security.TokenExtractData;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class KanapicServiceImpl implements KanapicService {
 
     private final KanapikJpaRepository kanapikJpaRepository;
@@ -31,15 +34,20 @@ public class KanapicServiceImpl implements KanapicService {
     private final TokenExtractData tokenExtractData;
 
     @Override
+    @Transactional
     @Secured("ROLE_ADMIN")
-    public void addKanapicDebit(KanapicDebitDto kanapicDebitDto) {
+    public void creditKanapic(KanapicDebitDto kanapicDebitDto) {
         Kanapic kanapic = KanapicMapper.getKanapicDebitDtoToKanapic(kanapicDebitDto, userJpaRepository);
         kanapikJpaRepository.save(kanapic);
+        log.info("The administrator added {} kanapik to the user's account Id = {}", kanapic.getCredit(), kanapic.getUser().getUsername());
     }
 
+    @Transactional
     @Override
-    public void addKanapicCredit(KanapicCreditDto kanapicCreditDto, String token) throws AccountBalanceException {
+    public void debitKanapic(KanapicCreditDto kanapicCreditDto, String token) throws AccountBalanceException {
+        log.info("Start credit kanapic");
         User user = userJpaRepository.getReferenceById(tokenExtractData.extractUserIdFromToken(token));
+        log.info("The beginning of debiting from the user's kanapic account Id = {}", user.getUsername());
         if (user.getKanapic() >= kanapicCreditDto.getCredit()) {
             user.setKanapic(user.getKanapic() - kanapicCreditDto.getCredit());
             LocalDateTime date = LocalDateTime.now();
@@ -57,6 +65,7 @@ public class KanapicServiceImpl implements KanapicService {
                     .advertisement(advertisement)
                     .build();
             kanapikJpaRepository.save(kanapic);
+            log.info("The kanapics were debited successfully from the user {} for the ad id = {}", kanapic.getUser().getUsername(), kanapic.getAdvertisement().getId());
         } else {
             throw new AccountBalanceException("You don't have enough kanapic");
         }

@@ -6,6 +6,7 @@ import com.senla.kanapa.service.CategoryService;
 import com.senla.kanapa.service.dto.CategoryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryJpaRepository categoryJpaRepository;
 
+    @Transactional
     @Override
     public void editCategory(CategoryDto categoryDto, Long categoryId) {
 
@@ -29,6 +31,7 @@ public class CategoryServiceImpl implements CategoryService {
         categoryJpaRepository.save(category);
     }
 
+    @Transactional
     @Override
     public void editCategory(CategoryDto categoryDto) {
         Category category = Category.builder()
@@ -42,16 +45,19 @@ public class CategoryServiceImpl implements CategoryService {
         categoryJpaRepository.save(category);
     }
 
+    @Transactional
     @Override
     public Category getCategoryById(Long categoryId) {
         return categoryJpaRepository.getReferenceById(categoryId);
     }
 
+    @Transactional
     @Override
     public List<Category> getAllCategory() {
         return categoryJpaRepository.findAll();
     }
 
+    @Transactional
     @Override
     public List<Category> getCategoryAndSubCategoryById(Long categoryId) {
         return categoryJpaRepository.getByIdOrParentCategory(categoryId);

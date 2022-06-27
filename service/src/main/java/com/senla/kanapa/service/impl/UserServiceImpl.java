@@ -22,11 +22,14 @@ import com.senla.kanapa.service.mapper.UserMapper;
 import com.senla.kanapa.service.security.JwtAuthorizationFilter;
 import com.senla.kanapa.service.security.TokenExtractData;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +37,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class UserServiceImpl implements UserService {
 
     private static final Integer KANAPIC = 10;
@@ -47,22 +51,27 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
+    @Transactional
     public void changePassword(UserPasswordDto userPasswordDto, String token) throws ChangePasswordException {
         User user = userJpaRepository.getReferenceById(tokenExtractData.extractUserIdFromToken(token));
+        log.info("Attempt to change the user's password {}.", user.getUsername());
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if (encoder.matches(userPasswordDto.getPasswordOld(), user.getPassword())) {
             String passwordNew = new BCryptPasswordEncoder().encode(userPasswordDto.getPasswordNew());
             user.setPassword(passwordNew);
             userJpaRepository.save(user);
             JwtAuthorizationFilter.TOKEN_BLACK.add(token);
+            log.info("The password of the user with the login - {} has been changed successfully", user.getUsername());
         } else {
-            throw new ChangePasswordException("An error occurred when changing the password");
+            throw new ChangePasswordException("An error occurred when changing the password " + user.getUsername());
         }
     }
 
     @Override
     @Secured("ROLE_ADMIN")
+    @Transactional
     public void addBonus(Long userId, Integer kanapic) {
+        log.info("Start adding KANAPIK");
         User user = userJpaRepository.getReferenceById(userId);
         if (user.getKanapic() != null) {
             user.setKanapic(kanapic + user.getKanapic());
@@ -70,17 +79,24 @@ public class UserServiceImpl implements UserService {
             user.setKanapic(kanapic);
         }
         userJpaRepository.save(user);
+        log.info("The administrator added {} KANAPIK to the user's account Id = {}", kanapic, userId);
     }
 
     @Override
+    @Transactional
     public void editUser(UserEditDto userEditDto, String token) throws TokenCompareException {
-        User user = userJpaRepository.getReferenceById(tokenExtractData.extractUserIdFromToken(token));
+        Long userId = tokenExtractData.extractUserIdFromToken(token);
+        log.info("Start editing user profile Id = {}", userId);
+        User user = userJpaRepository.getReferenceById(userId);
         UserMapper.convertUserEditDtoToUser(userEditDto, user);
         userJpaRepository.save(user);
+        log.info("End of editing the user profile Id = {}", userId);
     }
 
     @Override
+    @Transactional
     public void saveUser(UserAddDto userAddDto) {
+        log.info("Start saving user profile");
         String password = new BCryptPasswordEncoder().encode(userAddDto.getPassword());
         userAddDto.setPassword(password);
         List<Role> roles = new ArrayList<>();
@@ -92,20 +108,22 @@ public class UserServiceImpl implements UserService {
         user.setKanapic(KANAPIC);
         user.setDateRegistration(LocalDateTime.now());
         userJpaRepository.save(user);
+        log.info("End saving user profile");
     }
 
     @Override
+    @Transactional
     public List<UserDto> findAllUsers() {
         List<User> users = userJpaRepository.findAll();
         return users.stream().map(UserMapper::convertUserToDto).collect(Collectors.toList());
     }
 
     @Override
-//    @Secured("ROLE_ADMIN")
     public void addAdminRole(Long userId) {
         User user = userJpaRepository.getReferenceById(userId);
         user.getRoles().add(roleJpaRepository.getByAuthority(ROLE_ADMIN));
         userJpaRepository.save(user);
+        log.info("The administrator added the {} to the user {} ", ROLE_ADMIN, user.getUsername());
     }
 
     @Override
@@ -133,8 +151,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addTokenInBlackList(String token) {
+        Long userId = tokenExtractData.extractUserIdFromToken(token);
         TokenBlack tokenBlack = TokenBlack.builder().token(token).build();
         tokenBlackListJpaRepository.save(tokenBlack);
         JwtAuthorizationFilter.TOKEN_BLACK.add(token);
+        log.info(" The user Id {} exited the program", userId);
     }
 }

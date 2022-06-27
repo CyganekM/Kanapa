@@ -16,22 +16,20 @@ VALUES (2, 'bob', '$2a$10$zPhXrZ4aOoXNk7n101f8k.ATEv5ZqlZKQSI5Lj7F7FAO/Ltdzme7S'
         '1990-05-24 21:00:00', 'cyganek@tut.by', '+375(29)8250902', 1, NULL, 2030, '2022-06-07 08:27:40');
 
 INSERT INTO `advertisements`
-VALUES (1, 1, 7, 'HP laptop', 'Very good laptop', 500.00, NULL, '2022-05-14 21:00:00', NULL, '2022-05-28 19:04:28'),
-       (10, 1, 8, 'Lenovo Comp', 'So-so comp', 350.00, NULL, '2022-05-13 21:00:00', NULL, NULL),
-       (11, 1, 1, 'VW passat', 'Round wheels, transparent glass', 7000.00, NULL, '2022-05-12 21:00:00',
-        '2022-05-14 21:00:00', NULL),
-       (12, 2, 4, 'Apple phone', 'The condition is good. You can crack nuts with them', 50.00, NULL,
-        '2022-05-12 21:00:00', NULL, '2022-05-30 19:04:28'),
-       (13, 22, 6, 'Dog', 'big boy', 1200.00, NULL, '2022-05-18 10:45:28', NULL, NULL),
-       (14, 21, 10, 'Jacket', 'Season for spring or autumn. height 98-104', 80.00, NULL, '2022-05-24 07:30:28', NULL,
+VALUES (1, 1, 7, 'HP laptop', 'Very good laptop', 500.00, '2022-05-14 21:00:00', NULL, '2022-05-28 19:04:28'),
+       (10, 1, 8, 'Lenovo Comp', 'So-so comp', 350.00, '2022-05-13 21:00:00', NULL, NULL),
+       (11, 1, 1, 'VW passat', 'Round wheels, transparent glass', 7000.00, '2022-05-12 21:00:00', '2022-05-14 21:00:00',
         NULL),
-       (15, 20, 10, 'Dress', 'A very stylish dress for a little princess', 50.00, NULL, '2022-05-25 05:30:28', NULL,
-        NULL),
-       (16, 21, 10, 'Denim pants', 'Pink. 116-122', 20.00, NULL, '2022-05-26 05:42:00', NULL, NULL),
-       (17, 16, 11, 'Denim pants', 'Blue. ', 21.00, NULL, '2022-05-26 07:42:00', NULL, NULL),
-       (18, 15, 11, 'T-shirt', 'white with a pattern', 10.00, NULL, '2022-05-27 07:47:00', NULL, NULL),
-       (19, 2, 11, 'School shirt', 'school shirt', 5.00, NULL, '2022-05-27 08:00:00', NULL, NULL),
-       (20, 2, 6, 'Cat-Dog', 'sex - ?', 12000.00, NULL, '2022-06-13 06:02:08', '2022-06-13 06:48:53', NULL);
+       (12, 2, 4, 'Apple phone', 'The condition is good. You can crack nuts with them', 50.00, '2022-05-12 21:00:00',
+        '2022-05-30 19:04:28', NULL),
+       (13, 22, 6, 'Dog', 'big boy', 1200.00, '2022-05-18 10:45:28', NULL, NULL),
+       (14, 21, 10, 'Jacket', 'Season for spring or autumn. height 98-104', 80.00, '2022-05-24 07:30:28', NULL, NULL),
+       (15, 20, 10, 'Dress', 'A very stylish dress for a little princess', 50.00, '2022-05-25 05:28', NULL, NULL),
+       (16, 21, 10, 'Denim pants', 'Pink. 116-122', 20.00, '2022-05-26 05:42:00', NULL, NULL),
+       (17, 16, 11, 'Denim pants', 'Blue. ', 21.00, '2022-05-26 07:42:00', NULL, NULL),
+       (18, 15, 11, 'T-shirt', 'white with a pattern', 10.00, '2022-05-27 07:47:00', NULL, NULL),
+       (19, 2, 11, 'School shirt', 'school shirt', 5.00, '2022-05-27 08:00:00', NULL, NULL),
+       (20, 2, 6, 'Cat-Dog', 'sex - ?', 12000.00, '2022-06-13 06:02:08', '2022-06-13 06:48:53', NULL);
 
 INSERT INTO `comments`
 VALUES (16, 13, 1, '2022-05-20 16:40:58', 'Are you changing it for a brick?'),

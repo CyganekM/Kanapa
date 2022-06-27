@@ -23,7 +23,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private final AuthenticationManager authenticationManager;
 
-    private HandlerExceptionResolver resolver;
+    private final HandlerExceptionResolver resolver;
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager, HandlerExceptionResolver resolver) {
         this.authenticationManager = authenticationManager;

@@ -5,7 +5,7 @@ import com.senla.kanapa.service.dto.request.KanapicDebitDto;
 import com.senla.kanapa.service.exception.AccountBalanceException;
 
 public interface KanapicService {
-    void addKanapicDebit(KanapicDebitDto kanapicDebitDto);
+    void creditKanapic(KanapicDebitDto kanapicDebitDto);
 
-    void addKanapicCredit(KanapicCreditDto kanapicCreditDto, String token) throws AccountBalanceException;
+    void debitKanapic(KanapicCreditDto kanapicCreditDto, String token) throws AccountBalanceException;
 }

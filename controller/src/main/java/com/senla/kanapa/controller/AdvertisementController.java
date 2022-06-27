@@ -29,11 +29,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdvertisementController {
 
-    private final AdvertisementService advertisementService;
-
     private static final String FIELD_SORT = "dateBonus,user_rating";
-
     private static final String SORT_ORDER = "DESC";
+    private final AdvertisementService advertisementService;
 
     @PostMapping
     @Operation(summary = "Добавить объявление")

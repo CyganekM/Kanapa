@@ -1,5 +1,6 @@
 package com.senla.kanapa.service.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Component;
 
@@ -10,15 +11,18 @@ import java.time.ZoneId;
 public class TokenExtractData {
 
     public LocalDateTime extractDateExpiration(String token) {
-        var signingKey = SecurityConstants.JWT_SECRET.getBytes();
+        try {
+            var signingKey = SecurityConstants.JWT_SECRET.getBytes();
 
-        var parsedToken = Jwts.parser()
-                .setSigningKey(signingKey)
-                .parseClaimsJws(token.replace(SecurityConstants.TOKEN_PREFIX, ""));
+            var parsedToken = Jwts.parser()
+                    .setSigningKey(signingKey)
+                    .parseClaimsJws(token.replace(SecurityConstants.TOKEN_PREFIX, ""));
 
-        var dateExpiration = LocalDateTime.ofInstant(parsedToken.getBody().getExpiration().toInstant(), ZoneId.systemDefault());
-        ;
-        return dateExpiration;
+            var dateExpiration = LocalDateTime.ofInstant(parsedToken.getBody().getExpiration().toInstant(), ZoneId.systemDefault());
+            return dateExpiration;
+        } catch (ExpiredJwtException exception) {
+            return LocalDateTime.of(1, 1, 1, 1, 1);
+        }
     }
 
     public Long extractUserIdFromToken(String token) {

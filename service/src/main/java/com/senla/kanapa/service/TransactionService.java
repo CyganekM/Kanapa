@@ -11,5 +11,5 @@ public interface TransactionService {
 
     List<TransactionDto> getTransactionsSeller(String tokenSeller, Boolean customerFlag);
 
-    void setTransactionRating(String tokenSeller, Long transactionId, Integer score) throws TokenCompareException;
+    void setTransactionRating(String tokenCustomer, Long transactionId, Integer score) throws TokenCompareException;
 }

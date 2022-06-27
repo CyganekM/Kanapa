@@ -26,13 +26,13 @@ public class KanapicController {
     @Operation(summary = "Поступление КАНАПИКОВ")
     @ResponseStatus(HttpStatus.OK)
     public void setKanapicDebit(@RequestBody KanapicDebitDto kanapicDebitDto) {
-        kanapicService.addKanapicDebit(kanapicDebitDto);
+        kanapicService.creditKanapic(kanapicDebitDto);
     }
 
     @PostMapping("/credit")
     @Operation(summary = "Расход Канапиков")
     @ResponseStatus(HttpStatus.OK)
     public void setKanapicCredit(@RequestBody KanapicCreditDto kanapicCreditDto, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws AccountBalanceException {
-        kanapicService.addKanapicCredit(kanapicCreditDto, token);
+        kanapicService.debitKanapic(kanapicCreditDto, token);
     }
 }

@@ -191,19 +191,6 @@ class AdvertisementServiceImplTest {
         verify(advertisementJpaRepository).getByUserAndDateCloseIsNull(any());
     }
 
-    @Test
-    void AdvertisementServiceImpl_getAdvertisementOrderByRating_emptyList() {
-        when(advertisementJpaRepository.getByDateCloseIsNullOrderByDateBonusDesc()).thenReturn(new ArrayList<>());
-        assertTrue(advertisementServiceImpl.getAdvertisementOrderByRating().isEmpty());
-        verify(advertisementJpaRepository).getByDateCloseIsNullOrderByDateBonusDesc();
-    }
-
-    @Test
-    void AdvertisementServiceImpl_getAdvertisementOrderByRating() {
-        when(advertisementJpaRepository.getByDateCloseIsNullOrderByDateBonusDesc()).thenReturn(getAdvertisementList());
-        assertEquals(2, advertisementServiceImpl.getAdvertisementOrderByRating().size());
-        verify(advertisementJpaRepository).getByDateCloseIsNullOrderByDateBonusDesc();
-    }
 
     @Test
     void AdvertisementServiceImpl_getAdvertisementByFilter_emptyList() throws OperationException {

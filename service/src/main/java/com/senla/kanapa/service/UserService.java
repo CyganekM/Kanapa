@@ -26,5 +26,6 @@ public interface UserService extends UserDetailsService {
     void addAdminRole(Long userId);
 
     UserContactDto getUserByAdvertisementId(Long advertisementId, String token);
+
     void addTokenInBlackList(String token);
 }

@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,54 +37,65 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     private final TokenExtractData tokenExtractData;
 
     @Override
+    @Transactional
     public void saveAdvertisement(AdvertisementDto advertisementDto, String token) {
+        User user = userJpaRepository.getReferenceById(tokenExtractData.extractUserIdFromToken(token));
+        log.info("The user {} started adding the ad", user.getUsername());
         Advertisement advertisement = AdvertisementMapper.toAdvertisement(advertisementDto);
         advertisement.setCategory(categoryJpaRepository.getReferenceById(advertisementDto.getCategoryId()));
-        advertisement.setUser(userJpaRepository.getReferenceById(tokenExtractData.extractUserIdFromToken(token)));
+        advertisement.setUser(user);
         advertisement.setDateStart(LocalDateTime.now());
         advertisementJpaRepository.save(advertisement);
+        log.info("The user {} added an ad {}.", user.getUsername(), advertisement.getId());
     }
 
     @Override
+    @Transactional
     public void editAdvertisement(Long advertisementId, AdvertisementDto advertisementDto, String token) throws TokenCompareException {
+        Long userId = tokenExtractData.extractUserIdFromToken(token);
+        log.info("The user {} is editing the ad.", userId);
         Advertisement advertisement = advertisementJpaRepository.getReferenceById(advertisementId);
-        if (advertisement.getUser().getId().equals(tokenExtractData.extractUserIdFromToken(token))) {
+
+        if (advertisement.getUser().getId().equals(userId)) {
             AdvertisementMapper.toAdvertisement(advertisement, advertisementDto);
             advertisementJpaRepository.save(advertisement);
+            log.info("The operation of editing the ad {} by the user {} - was successful", advertisement.getId(), userId);
         } else {
-            throw new TokenCompareException("You don't have access to delete this comment advertisement");
+            throw new TokenCompareException("You id = " + userId + " don't have access to edit this advertisement id = " + advertisement.getId());
         }
     }
 
     @Override
+    @Transactional
     public void closeAdvertisement(Long advertisementId, String token) throws TokenCompareException {
+        Long userId = tokenExtractData.extractUserIdFromToken(token);
+        log.info("The user {} is closing the ad.", userId);
         Advertisement advertisement = advertisementJpaRepository.getReferenceById(advertisementId);
-        if (advertisement.getUser().getId().equals(tokenExtractData.extractUserIdFromToken(token))) {
+        if (advertisement.getUser().getId().equals(userId)) {
             advertisement.setDateClose(LocalDateTime.now());
             advertisementJpaRepository.save(advertisement);
+            log.info("The operation of editing the ad {} by the user {} - was successful", advertisement.getId(), userId);
         } else {
-            throw new TokenCompareException("You don't have access to delete this comment advertisement");
+            throw new TokenCompareException("You Id = " + userId + " don't have access to delete this comment advertisement Id = " + advertisement.getId());
         }
     }
 
     @Override
+    @Transactional
     public List<AdvertisementDto> getAdvertisementByUser(Long userId) {
         User user = userJpaRepository.getReferenceById(userId);
         List<Advertisement> advertisementList = advertisementJpaRepository.getByUserAndDateCloseIsNull(user);
         return advertisementList.stream().map(AdvertisementMapper::toDto).collect(Collectors.toList());
     }
 
-    @Override
-    public List<AdvertisementDto> getAdvertisementOrderByRating() {
-        List<Advertisement> advertisementList = advertisementJpaRepository.getByDateCloseIsNullOrderByDateBonusDesc();
-        return advertisementList.stream().map(AdvertisementMapper::toDto).collect(Collectors.toList());
-    }
-
     //    @Scheduled(cron = "${AdvertisementServiceImpl.cronExpression}")
-    private void scheduleCleanAdvertisementBonusDate() {
+    @Transactional
+    void scheduleCleanAdvertisementBonusDate() {
+        log.info("Start of cleaning BonusDate");
         LocalDateTime dateTime = LocalDateTime.now();
         List<Advertisement> advertisementList = advertisementJpaRepository.getAdvertisementByDateBonusNotNull();
         advertisementList.stream().forEach(advertisement -> cleanBonusDate(advertisement, dateTime));
+        log.info("End of cleaning BonusDate");
     }
 
     private void cleanBonusDate(Advertisement advertisement, LocalDateTime dateTime) {
@@ -93,8 +105,10 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         }
     }
 
+    @Transactional
     @Override
     public List<AdvertisementDto> getAdvertisementByFilter(List<FilterDto> filterDtoList, String fieldSort, Direction sort) throws OperationException {
+        log.info("Start of ad selection");
         String[] fieldsSort = fieldSort.split(",");
         List<Filter<?>> filterList = filterDtoList.stream().map(filterDto -> FilterMapper.toFilter(filterDto, categoryJpaRepository)).collect(Collectors.toList());
         return advertisementCustomRepository.getQueryResult(filterList, Sort.by(sort, fieldsSort)).stream()

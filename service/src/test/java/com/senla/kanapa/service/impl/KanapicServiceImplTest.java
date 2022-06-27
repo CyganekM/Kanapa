@@ -160,7 +160,7 @@ class KanapicServiceImplTest {
         when(kanapikJpaRepository.save(any())).thenReturn(getKanapic());
         when(kanapicDebitDto.getDebit()).thenReturn(1);
         when(kanapicDebitDto.getUserId()).thenReturn(123L);
-        kanapicServiceImpl.addKanapicDebit(kanapicDebitDto);
+        kanapicServiceImpl.creditKanapic(kanapicDebitDto);
         verify(userJpaRepository).getReferenceById((Long) any());
         verify(kanapikJpaRepository).save((Kanapic) any());
         verify(kanapicDebitDto, atLeast(1)).getDebit();
@@ -175,7 +175,7 @@ class KanapicServiceImplTest {
         when(advertisementJpaRepository.getReferenceById(anyLong())).thenReturn(getAdvertisementList().get(0));
         when(kanapicCreditDto.getCredit()).thenReturn(1);
         when(kanapicCreditDto.getAdvertisementId()).thenReturn(1L);
-        kanapicServiceImpl.addKanapicCredit(kanapicCreditDto, "ABC123");
+        kanapicServiceImpl.debitKanapic(kanapicCreditDto, "ABC123");
         verify(userJpaRepository).getReferenceById(anyLong());
         verify(tokenExtractData).extractUserIdFromToken(anyString());
         verify(kanapikJpaRepository).save(any());

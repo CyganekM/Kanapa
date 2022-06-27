@@ -10,6 +10,7 @@ import com.senla.kanapa.service.exception.ChangePasswordException;
 import com.senla.kanapa.service.exception.TokenCompareException;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,7 @@ import java.util.List;
 @RequestMapping("/users")
 @Validated
 @RequiredArgsConstructor
+@Log4j2
 public class UserController {
 
     private final UserService userService;
