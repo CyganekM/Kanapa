@@ -55,6 +55,7 @@ public class MessageServiceImpl implements MessageService {
             messageJpaRepository.delete(message);
             log.info("Deleting of the message Id = {}  was successful", messageId);
         } else {
+            log.error("The user Id ={} cannot edit the data", userId);
             throw new TokenCompareException("You don't have access to delete this message");
         }
     }
@@ -77,6 +78,7 @@ public class MessageServiceImpl implements MessageService {
             messageJpaRepository.save(message);
             log.info("Editing of the message Id = {}  was successful", messageId);
         } else {
+            log.error("The user Id ={} cannot edit the data", userId);
             throw new TokenCompareException("You don't have access to edit this message");
         }
     }

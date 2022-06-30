@@ -34,35 +34,35 @@ public class AdvertisementController {
     private final AdvertisementService advertisementService;
 
     @PostMapping
-    @Operation(summary = "Добавить объявление")
+    @Operation(summary = "Add an advertisement")
     @ResponseStatus(HttpStatus.OK)
     public void addAdvertisement(@RequestBody AdvertisementDto advertisementDto, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         advertisementService.saveAdvertisement(advertisementDto, token);
     }
 
     @PutMapping("/{advertisementId}")
-    @Operation(summary = "Редактировать объявление")
+    @Operation(summary = "Edit an advertisement")
     @ResponseStatus(HttpStatus.OK)
     public void editAdvertisement(@RequestBody AdvertisementDto advertisementDto, @PathVariable Long advertisementId, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws TokenCompareException {
         advertisementService.editAdvertisement(advertisementId, advertisementDto, token);
     }
 
     @DeleteMapping("/{advertisementId}")
-    @Operation(summary = "Закрыть объявление")
+    @Operation(summary = "Close an advertisement")
     @ResponseStatus(HttpStatus.OK)
     public void closeAdvertisement(@PathVariable Long advertisementId, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws TokenCompareException {
         advertisementService.closeAdvertisement(advertisementId, token);
     }
 
     @GetMapping("/users/{userId}")
-    @Operation(summary = "Показать текущие(открытые) объявления пользоватея")
+    @Operation(summary = "Show current(open) user advertisements")
     @ResponseStatus(HttpStatus.OK)
     public List<AdvertisementDto> getOpenAdvertisementByUser(@PathVariable Long userId) {
         return advertisementService.getAdvertisementByUser(userId);
     }
 
     @GetMapping
-    @Operation(summary = "Фильтры и сортировка объявлений")
+    @Operation(summary = "Filters and sorting of advertisements")
     @ResponseStatus(HttpStatus.OK)
     public List<AdvertisementDto> getCurrentOrder(@RequestBody(required = false) List<FilterDto> filterDto,
                                                   @RequestParam(defaultValue = FIELD_SORT) String fieldSort,

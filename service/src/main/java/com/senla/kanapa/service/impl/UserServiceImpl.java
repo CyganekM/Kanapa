@@ -17,7 +17,6 @@ import com.senla.kanapa.service.dto.request.UserPasswordDto;
 import com.senla.kanapa.service.dto.response.UserContactDto;
 import com.senla.kanapa.service.dto.response.UserDto;
 import com.senla.kanapa.service.exception.ChangePasswordException;
-import com.senla.kanapa.service.exception.TokenCompareException;
 import com.senla.kanapa.service.mapper.UserMapper;
 import com.senla.kanapa.service.security.JwtAuthorizationFilter;
 import com.senla.kanapa.service.security.TokenExtractData;
@@ -84,7 +83,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void editUser(UserEditDto userEditDto, String token) throws TokenCompareException {
+    public void editUser(UserEditDto userEditDto, String token) {
         Long userId = tokenExtractData.extractUserIdFromToken(token);
         log.info("Start editing user profile Id = {}", userId);
         User user = userJpaRepository.getReferenceById(userId);
@@ -144,6 +143,7 @@ public class UserServiceImpl implements UserService {
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         User user = userJpaRepository.getUserByUsername(login);
         if (user == null) {
+            log.error("There is no user with the login {}", login);
             throw new UsernameNotFoundException(String.format("User '%s' not found", login));
         }
         return user;

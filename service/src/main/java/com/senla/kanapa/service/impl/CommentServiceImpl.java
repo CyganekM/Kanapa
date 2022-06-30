@@ -56,6 +56,7 @@ public class CommentServiceImpl implements CommentService {
             commentJpaRepository.delete(comment);
             log.info("The user Id = {} has finished deleting the comment Id = {}", userId, comment.getId());
         } else {
+            log.error("The user Id ={} cannot edit the data", userId);
             throw new TokenCompareException("You don't have access to delete this comment");
         }
     }
@@ -78,6 +79,7 @@ public class CommentServiceImpl implements CommentService {
             commentJpaRepository.save(comment);
             log.info("The user Id = {} has finished editing the comment Id = {}", userId, comment.getId());
         } else {
+            log.error("The user Id ={} cannot edit the data", userId);
             throw new TokenCompareException("You don't have access to edit this comment");
         }
     }

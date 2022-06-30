@@ -37,7 +37,7 @@ public class KanapicServiceImpl implements KanapicService {
     @Transactional
     @Secured("ROLE_ADMIN")
     public void creditKanapic(KanapicDebitDto kanapicDebitDto) {
-        Kanapic kanapic = KanapicMapper.getKanapicDebitDtoToKanapic(kanapicDebitDto, userJpaRepository);
+        Kanapic kanapic = KanapicMapper.toKanapic(kanapicDebitDto, userJpaRepository);
         kanapikJpaRepository.save(kanapic);
         log.info("The administrator added {} kanapik to the user's account Id = {}", kanapic.getCredit(), kanapic.getUser().getUsername());
     }
@@ -67,6 +67,7 @@ public class KanapicServiceImpl implements KanapicService {
             kanapikJpaRepository.save(kanapic);
             log.info("The kanapics were debited successfully from the user {} for the ad id = {}", kanapic.getUser().getUsername(), kanapic.getAdvertisement().getId());
         } else {
+            log.error("Insufficient funds to be debited from the account {}", user.getUsername());
             throw new AccountBalanceException("You don't have enough kanapic");
         }
     }

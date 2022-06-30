@@ -7,7 +7,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class TransactionMapper {
 
-    public TransactionDto convertTransactionToDto(Transaction transaction) {
+    public TransactionDto toTransactionDto(Transaction transaction) {
         return TransactionDto.builder()
                 .id(transaction.getId())
                 .date(transaction.getDate())

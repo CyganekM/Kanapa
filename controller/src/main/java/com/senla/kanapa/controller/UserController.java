@@ -45,41 +45,41 @@ public class UserController {
     }
 
     @GetMapping("/advertisement")
-    @Operation(summary = "Показать пользователя разместившего объявление")
+    @Operation(summary = "Can only be done by the user who made the transaction (confirmed by the seller)")
     public ResponseEntity<UserContactDto> getUserByAdvertisementId(@RequestParam Long advertisementId, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         return ResponseEntity.ok().body(userService.getUserByAdvertisementId(advertisementId, token));
     }
 
     @PostMapping
-    @Operation(summary = "Добавить нового пользователя")
+    @Operation(summary = "Add a new user")
     @ResponseStatus(HttpStatus.OK)
     public void addUser(@RequestBody @Valid UserAddDto userAddDto) {
         userService.saveUser(userAddDto);
     }
 
     @PutMapping
-    @Operation(summary = "Редактировать пользователя")
+    @Operation(summary = "Edit a user")
     @ResponseStatus(HttpStatus.OK)
     public void editUser(@RequestBody @Valid UserEditDto userEditDto, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws TokenCompareException {
         userService.editUser(userEditDto, token);
     }
 
     @PutMapping("/password")
-    @Operation(summary = "Изменить пароль")
+    @Operation(summary = "Change Password")
     @ResponseStatus(HttpStatus.OK)
     public void changePassword(@RequestBody @Valid UserPasswordDto userPasswordDto, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws ChangePasswordException {
         userService.changePassword(userPasswordDto, token);
     }
 
     @PutMapping("/{userId}/kanapic")
-    @Operation(summary = "Добавить канапики на счет пользователя")
+    @Operation(summary = "Add kanapics to the user's account")
     @ResponseStatus(HttpStatus.OK)
     public void addBonus(@PathVariable Long userId, @RequestParam("kanapic") Integer kanapic) {
         userService.addBonus(userId, kanapic);
     }
 
     @PutMapping("/{userId}/admin_role")
-    @Operation(summary = "Добавить роль администратора")
+    @Operation(summary = "Add an administrator role")
     @ResponseStatus(HttpStatus.OK)
     public void addAdminRole(@PathVariable Long userId) {
         userService.addAdminRole(userId);

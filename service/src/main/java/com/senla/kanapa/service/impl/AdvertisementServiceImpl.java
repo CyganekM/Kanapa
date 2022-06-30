@@ -61,6 +61,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             advertisementJpaRepository.save(advertisement);
             log.info("The operation of editing the ad {} by the user {} - was successful", advertisement.getId(), userId);
         } else {
+            log.error("The user Id ={} cannot edit the data", userId);
             throw new TokenCompareException("You id = " + userId + " don't have access to edit this advertisement id = " + advertisement.getId());
         }
     }
@@ -76,6 +77,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             advertisementJpaRepository.save(advertisement);
             log.info("The operation of editing the ad {} by the user {} - was successful", advertisement.getId(), userId);
         } else {
+            log.error("The user Id ={} cannot close the data", userId);
             throw new TokenCompareException("You Id = " + userId + " don't have access to delete this comment advertisement Id = " + advertisement.getId());
         }
     }
@@ -88,7 +90,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         return advertisementList.stream().map(AdvertisementMapper::toDto).collect(Collectors.toList());
     }
 
-    //    @Scheduled(cron = "${AdvertisementServiceImpl.cronExpression}")
+//    @Scheduled(cron = "* * */2 * * *")
     @Transactional
     void scheduleCleanAdvertisementBonusDate() {
         log.info("Start of cleaning BonusDate");

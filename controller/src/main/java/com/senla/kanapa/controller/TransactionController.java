@@ -31,22 +31,22 @@ public class TransactionController {
     private final TransactionService transactionService;
 
     @PutMapping("/{transactionId}")
-    @Operation(summary = "Установить признак сделки",
-            description = "Если покупетель запросил данные продавца, то прадовец может поставить признак сделки")
+    @Operation(summary = "Set the transaction sign",
+            description = "If the buyer has requested the seller's data, the seller can put a sign of the transaction")
     @ResponseStatus(HttpStatus.OK)
     public void setCustomerFlag(@PathVariable Long transactionId, @RequestHeader(HttpHeaders.AUTHORIZATION) String tokenSeller) throws TokenCompareException {
         transactionService.setCustomerFlag(tokenSeller, transactionId);
     }
 
     @GetMapping
-    @Operation(summary = "Показать операции (для продавца)")
+    @Operation(summary = "Show transactions (for the seller)")
     public ResponseEntity<List<TransactionDto>> getTransactionsSeller(@RequestHeader(HttpHeaders.AUTHORIZATION) String tokenSeller, @RequestParam Boolean customerFlag) {
         return ResponseEntity.ok().body(transactionService.getTransactionsSeller(tokenSeller, customerFlag));
     }
 
     @PutMapping("/{transactionId}/rating")
-    @Operation(summary = "Задать рейтинг продавцу",
-            description = "Может сделать только тот пользователь, кторый совершил сделку(подтверждено продавцом)")
+    @Operation(summary = "Set a rating for the seller",
+            description = "Can only be done by the user who made the transaction (confirmed by the seller)")
     @ResponseStatus(HttpStatus.OK)
     public void setSellerRating(@RequestHeader(HttpHeaders.AUTHORIZATION) String tokenCustomer,
                                 @PathVariable Long transactionId, @RequestParam @Min(1) @Max(10) Integer score) throws TokenCompareException {

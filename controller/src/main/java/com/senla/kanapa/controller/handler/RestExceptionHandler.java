@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
-//@ControllerAdvice
 @Log4j2
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 

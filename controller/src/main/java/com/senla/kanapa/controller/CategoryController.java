@@ -25,28 +25,28 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping
-    @Operation(summary = "Добавить категорию")
+    @Operation(summary = "Add a category")
     @ResponseStatus(HttpStatus.OK)
     public void addCategory(@RequestBody CategoryDto categoryDto) {
         categoryService.editCategory(categoryDto);
     }
 
     @PutMapping("/{categoryId}")
-    @Operation(summary = "Редактировать категорию")
+    @Operation(summary = "Edit a category")
     @ResponseStatus(HttpStatus.OK)
     public void editCategory(@RequestBody CategoryDto categoryDto, @PathVariable Long categoryId) {
         categoryService.editCategory(categoryDto, categoryId);
     }
 
     @GetMapping
-    @Operation(summary = "Вернуть все категории")
+    @Operation(summary = "Show all categories")
     @ResponseStatus(HttpStatus.OK)
     public List<Category> getAllCategory() {
         return categoryService.getAllCategory();
     }
 
     @GetMapping("/{categoryId}")
-    @Operation(summary = "Показать категорию с подкатегорями")
+    @Operation(summary = "Show a category with sub-categories")
     @ResponseStatus(HttpStatus.OK)
     public List<Category> getCategoryAndSubCategoryById(@PathVariable Long categoryId) {
         return categoryService.getCategoryAndSubCategoryById(categoryId);

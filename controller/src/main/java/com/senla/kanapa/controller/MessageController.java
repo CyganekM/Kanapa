@@ -30,28 +30,28 @@ public class MessageController {
     private final MessageService messageService;
 
     @GetMapping("/talk")
-    @Operation(summary = "Показать диалог двух пользователей")
+    @Operation(summary = "Show user dialog")
     public ResponseEntity<List<MessageDto>> getTalk(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestParam Long recipientId) {
         return ResponseEntity.ok().body(messageService.getTalk(recipientId, token));
     }
 
     @PostMapping
-    @Operation(summary = "Отправить сообщение пользователю")
+    @Operation(summary = "Send a message to the user")
     @ResponseStatus(HttpStatus.OK)
     public void sendMessage(@RequestBody MessageDto messageDto, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         messageService.sendMessage(messageDto, token);
     }
 
     @PutMapping("/{messageId}")
-    @Operation(summary = "Редактировать сообщение",
-            description = "Редактировать сообщение может только его отправитель")
+    @Operation(summary = "Edit a message",
+            description = "Only the sender can edit the message")
     @ResponseStatus(HttpStatus.OK)
     public void editMessage(@RequestBody MessageDto messageDto, @PathVariable Long messageId, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws TokenCompareException {
         messageService.editMessage(messageDto, messageId, token);
     }
 
     @DeleteMapping("/{messageId}")
-    @Operation(summary = "Удалить сообщение")
+    @Operation(summary = "Delete a message")
     @ResponseStatus(HttpStatus.OK)
     public void deleteMessage(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable Long messageId) throws TokenCompareException {
         messageService.deleteMessage(messageId, token);

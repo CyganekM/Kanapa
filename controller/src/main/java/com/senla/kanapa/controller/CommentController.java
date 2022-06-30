@@ -28,28 +28,28 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping
-    @Operation(summary = "Добавить комментарий к объявлению")
+    @Operation(summary = "Add a comment to the advertisement")
     @ResponseStatus(HttpStatus.OK)
     public void addComment(@RequestBody CommentDto commentDto, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         commentService.addComment(commentDto, token);
     }
 
     @DeleteMapping("/{commentId}")
-    @Operation(summary = "Удалить коментарий")
+    @Operation(summary = "Delete a comment")
     @ResponseStatus(HttpStatus.OK)
     public void deleteComment(@PathVariable Long commentId, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws TokenCompareException {
         commentService.delComment(commentId, token);
     }
 
     @GetMapping("/advertisement/{advertisementId}")
-    @Operation(summary = "Показать все коментари к данному объявлению")
+    @Operation(summary = "Show all comments on this advertisement")
     @ResponseStatus(HttpStatus.OK)
     public List<CommentDto> getCommentsByAdvertisementId(@PathVariable Long advertisementId) {
         return commentService.getCommentsByAdvertisementId(advertisementId);
     }
 
     @PutMapping("/{commentId}")
-    @Operation(summary = "Редактировать комментарий")
+    @Operation(summary = "Edit a comment")
     @ResponseStatus(HttpStatus.OK)
     public void editComments(@RequestBody CommentDto commentDto, @PathVariable Long commentId, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws TokenCompareException {
         commentService.editComment(commentDto, commentId, token);

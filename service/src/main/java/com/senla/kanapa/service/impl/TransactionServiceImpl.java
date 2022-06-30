@@ -38,6 +38,7 @@ public class TransactionServiceImpl implements TransactionService {
             transaction.setCustomerFlag(true);
             transactionJpaRepository.save(transaction);
         } else {
+            log.error("The user Id ={} cannot edit the data", sellerId);
             throw new TokenCompareException("You don't have access to edit this transaction");
         }
     }
@@ -48,7 +49,7 @@ public class TransactionServiceImpl implements TransactionService {
         Long sellerId = tokenExtractData.extractUserIdFromToken(tokenSeller);
         log.info("The seller id = {} requested operations", sellerId);
         List<Transaction> transactionList = transactionJpaRepository.getByAdvertisement_User_IdAndCustomerFlag(sellerId, customerFlag);
-        return transactionList.stream().map(TransactionMapper::convertTransactionToDto).collect(Collectors.toList());
+        return transactionList.stream().map(TransactionMapper::toTransactionDto).collect(Collectors.toList());
     }
 
     @Override
@@ -66,6 +67,7 @@ public class TransactionServiceImpl implements TransactionService {
             userJpaRepository.save(seller);
             log.info("The rating has been set");
         } else {
+            log.error("The user Id ={} cannot edit the data", customerId);
             throw new TokenCompareException("You don't have access to edit this transaction");
         }
     }

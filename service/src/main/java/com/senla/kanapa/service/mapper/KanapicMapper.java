@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @UtilityClass
 public class KanapicMapper {
 
-    public Kanapic getKanapicDebitDtoToKanapic(KanapicDebitDto kanapicDto, UserJpaRepository userJpaRepository) {
+    public Kanapic toKanapic(KanapicDebitDto kanapicDto, UserJpaRepository userJpaRepository) {
         User user = userJpaRepository.getReferenceById(kanapicDto.getUserId());
         user.setKanapic(user.getKanapic() + kanapicDto.getDebit());
         return Kanapic.builder()
